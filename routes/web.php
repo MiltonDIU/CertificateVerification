@@ -17,6 +17,11 @@ use App\Http\Controllers\Admin\SlidersController;
 use App\Http\Controllers\Admin\PartnersController;
 use App\Http\Controllers\Admin\SocialsController;
 use App\Http\Controllers\Admin\TestimonialController;
+use App\Http\Controllers\Admin\FacultyController;
+use App\Http\Controllers\Admin\ProgramsController;
+use App\Http\Controllers\Admin\ConvocationsController;
+use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Admin\GlobalSearchController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -36,6 +41,7 @@ Route::get('/home', function () {
     return redirect()->route('admin.home');
 });
 
+Route::get('students/certificate', [StudentController::class,'certificate']);
 
 
 
@@ -45,6 +51,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
         'permissions' => PermissionsController::class,
         'roles' => RolesController::class,
         'users' => UsersController::class,
+        'faculties' => FacultyController::class,
+        'convocations' => ConvocationsController::class,
+        'programs' => ProgramsController::class,
+        'students' => StudentController::class,
     ]);
 
 
@@ -62,6 +72,20 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     Route::get('settings', [SettingsController::class, 'edit'])->name('settings.edit');
     Route::put('settings', [SettingsController::class, 'update'])->name('settings.update');
 
+    // Faculty
+    Route::delete('faculties/destroy', [FacultyController::class,'massDestroy'])->name('faculties.massDestroy');
+
+    // Convocations
+    Route::delete('convocations/destroy', [ConvocationsController::class,'@massDestroy'])->name('convocations.massDestroy');
+    Route::post('convocations/media', [ConvocationsController::class,'storeMedia'])->name('convocations.storeMedia');
+    Route::post('convocations/ckmedia', [ConvocationsController::class,'storeCKEditorImages'])->name('convocations.storeCKEditorImages');
+    // Programs
+    Route::delete('programs/destroy', [ProgramsController::class,'massDestroy'])->name('programs.massDestroy');
+
+    // Student
+    Route::delete('students/destroy', [StudentController::class,'massDestroy'])->name('students.massDestroy');
+
+    Route::get('global-search', [GlobalSearchController::class,'search'])->name('globalSearch');
 });
 
 

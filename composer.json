@@ -6,14 +6,16 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "barryvdh/laravel-dompdf": "^2.0",
         "fruitcake/laravel-cors": "^2.0.5",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.19",
+        "laravel/passport": "^11.3",
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^3.4",
-        "yajra/laravel-datatables-oracle": "^9.19",
-        "spatie/laravel-medialibrary": "^10.0.7"
+        "spatie/laravel-medialibrary": "^10.0.7",
+        "yajra/laravel-datatables-oracle": "^9.19"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

@@ -11,8 +11,13 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li>
+                    <select class="searchable-field form-control">
+
+                    </select>
+                </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route("admin.home") }}">
+                    <a class="nav-link {{ request()->routeIs("admin.home") ? "active" : "" }}" href="{{ route("admin.home") }}">
                         <i class="fas fa-fw fa-tachometer-alt nav-icon">
                         </i>
                         <p>
@@ -22,7 +27,7 @@
                 </li>
                 @can('user_management_access')
                     <li class="nav-item has-treeview {{ request()->is("admin/permissions*") ? "menu-open" : "" }} {{ request()->is("admin/roles*") ? "menu-open" : "" }} {{ request()->is("admin/users*") ? "menu-open" : "" }} {{ request()->is("admin/audit-logs*") ? "menu-open" : "" }}">
-                        <a class="nav-link nav-dropdown-toggle" href="#">
+                        <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/permissions*") ? "active" : "" }} {{ request()->is("admin/roles*") ? "active" : "" }} {{ request()->is("admin/users*") ? "active" : "" }} {{ request()->is("admin/audit-logs*") ? "active" : "" }}" href="#">
                             <i class="fa-fw nav-icon fas fa-users">
 
                             </i>
@@ -83,6 +88,8 @@
                         </ul>
                     </li>
                 @endcan
+
+
                 @can('setting_access')
                     <li class="nav-item">
                         <a href="{{ route("admin.settings.edit") }}" class="nav-link {{ request()->is("admin/settings") || request()->is("admin/settings/*") ? "c-active" : "" }}">
@@ -95,7 +102,54 @@
                 @endcan
 
 
+                @can('faculty_access')
+                    <li class="nav-item">
+                        <a href="{{ route("admin.faculties.index") }}" class="nav-link {{ request()->is("admin/faculties") || request()->is("admin/faculties/*") ? "active" : "" }}">
+                            <i class="fa-fw nav-icon fas fa-cogs">
 
+                            </i>
+                            <p>
+                                {{ trans('cruds.faculty.title') }}
+                            </p>
+                        </a>
+                    </li>
+                @endcan
+                @can('convocation_access')
+                    <li class="nav-item">
+                        <a href="{{ route("admin.convocations.index") }}" class="nav-link {{ request()->is("admin/convocations") || request()->is("admin/convocations/*") ? "active" : "" }}">
+                            <i class="fa-fw nav-icon fas fa-cogs">
+
+                            </i>
+                            <p>
+                                {{ trans('cruds.convocation.title') }}
+                            </p>
+                        </a>
+                    </li>
+                @endcan
+                @can('program_access')
+                    <li class="nav-item">
+                        <a href="{{ route("admin.programs.index") }}" class="nav-link {{ request()->is("admin/programs") || request()->is("admin/programs/*") ? "active" : "" }}">
+                            <i class="fa-fw nav-icon fas fa-cogs">
+
+                            </i>
+                            <p>
+                                {{ trans('cruds.program.title') }}
+                            </p>
+                        </a>
+                    </li>
+                @endcan
+                @can('student_access')
+                    <li class="nav-item">
+                        <a href="{{ route("admin.students.index") }}" class="nav-link {{ request()->is("admin/students") || request()->is("admin/students/*") ? "active" : "" }}">
+                            <i class="fa-fw nav-icon fas fa-cogs">
+
+                            </i>
+                            <p>
+                                {{ trans('cruds.student.title') }}
+                            </p>
+                        </a>
+                    </li>
+                @endcan
                 @if(file_exists(app_path('Http/Controllers/Auth/ChangePasswordController.php')))
                     @can('profile_password_edit')
                         <li class="nav-item">
