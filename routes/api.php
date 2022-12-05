@@ -28,7 +28,7 @@ Route::post('/auth/login', [AuthUserApiController::class, 'loginUser']);
 Route::apiResource('faculties',  FacultyApiController::class);
 
 Route::apiResource('students', StudentApiController::class);
-
+Route::get('student-result/{hash_code}',[StudentApiController::class,'studentResult'])->name('studentResult');
 Route::group(['prefix' => 'v1', 'as' => 'api.'], function () {
     // Faculty
    // Route::apiResource('faculties',  FacultyApiController::class);

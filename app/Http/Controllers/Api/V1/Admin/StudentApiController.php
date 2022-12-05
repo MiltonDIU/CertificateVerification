@@ -88,6 +88,21 @@ $qc_url = url($db_url);
 
         return new StudentResource($student->load(['faculty', 'program', 'convocation']));
     }
+    public function studentResult($hash_code)
+    {
+        $student = Student::where('hash_code',$hash_code)->first(['name','serial_no','cgpa','result_published_date','student_id_no']);
+        if ($student){
+            return response()->json([
+                "result" => (object)$student,
+                "status"=>true
+            ],200);
+        }else{
+            return response()->json([
+                "result" => (object)$student,
+                "status"=>false
+            ],404);
+        }
+    }
 
     public function update(UpdateStudentRequest $request, Student $student)
     {
