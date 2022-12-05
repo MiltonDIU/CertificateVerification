@@ -87,6 +87,18 @@
                             {{ App\Models\Convocation::IS_ACTIVE_SELECT[$convocation->is_active] ?? '' }}
                         </td>
                     </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.convocation.fields.certificate_design') }}
+                        </th>
+                        <td>
+                            @if($convocation->certificate_design)
+                                <a href="{{ $convocation->certificate_design->getUrl() }}" target="_blank" style="display: inline-block">
+                                    <img src="{{ $convocation->certificate_design->getUrl('thumb') }}">
+                                </a>
+                            @endif
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
                 <div class="form-group">

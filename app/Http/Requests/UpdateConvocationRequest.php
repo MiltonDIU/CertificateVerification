@@ -36,6 +36,9 @@ class UpdateConvocationRequest extends FormRequest
             'is_active' => [
                 'required',
             ],
+            'certificate_design' => [
+                'required',
+            ],
         ];
     }
 }

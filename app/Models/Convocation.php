@@ -38,6 +38,7 @@ class Convocation extends Model implements HasMedia
     protected $appends = [
         'controller_of_examination_signature',
         'vice_chancellor_signature',
+        'certificate_design',
     ];
 
     protected $fillable = [
@@ -77,6 +78,18 @@ class Convocation extends Model implements HasMedia
     public function getViceChancellorSignatureAttribute()
     {
         $file = $this->getMedia('vice_chancellor_signature')->last();
+        if ($file) {
+            $file->url       = $file->getUrl();
+            $file->thumbnail = $file->getUrl('thumb');
+            $file->preview   = $file->getUrl('preview');
+        }
+
+        return $file;
+    }
+
+    public function getCertificateDesignAttribute()
+    {
+        $file = $this->getMedia('certificate_design')->last();
         if ($file) {
             $file->url       = $file->getUrl();
             $file->thumbnail = $file->getUrl('thumb');

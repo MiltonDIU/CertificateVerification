@@ -81,8 +81,19 @@ class ConvocationsController extends Controller
             $table->editColumn('is_active', function ($row) {
                 return $row->is_active ? Convocation::IS_ACTIVE_SELECT[$row->is_active] : '';
             });
+            $table->editColumn('certificate_design', function ($row) {
+                if ($photo = $row->certificate_design) {
+                    return sprintf(
+                        '<a href="%s" target="_blank"><img src="%s" width="50px" height="50px"></a>',
+                        $photo->url,
+                        $photo->thumbnail
+                    );
+                }
 
-            $table->rawColumns(['actions', 'placeholder', 'controller_of_examination_signature', 'vice_chancellor_signature']);
+                return '';
+            });
+
+            $table->rawColumns(['actions', 'placeholder', 'controller_of_examination_signature', 'vice_chancellor_signature', 'certificate_design']);
 
             return $table->make(true);
         }
@@ -107,6 +118,10 @@ class ConvocationsController extends Controller
 
         if ($request->input('vice_chancellor_signature', false)) {
             $convocation->addMedia(storage_path('tmp/uploads/' . basename($request->input('vice_chancellor_signature'))))->toMediaCollection('vice_chancellor_signature');
+        }
+
+        if ($request->input('certificate_design', false)) {
+            $convocation->addMedia(storage_path('tmp/uploads/' . basename($request->input('certificate_design'))))->toMediaCollection('certificate_design');
         }
 
         if ($media = $request->input('ck-media', false)) {
@@ -147,6 +162,17 @@ class ConvocationsController extends Controller
             }
         } elseif ($convocation->vice_chancellor_signature) {
             $convocation->vice_chancellor_signature->delete();
+        }
+
+        if ($request->input('certificate_design', false)) {
+            if (!$convocation->certificate_design || $request->input('certificate_design') !== $convocation->certificate_design->file_name) {
+                if ($convocation->certificate_design) {
+                    $convocation->certificate_design->delete();
+                }
+                $convocation->addMedia(storage_path('tmp/uploads/' . basename($request->input('certificate_design'))))->toMediaCollection('certificate_design');
+            }
+        } elseif ($convocation->certificate_design) {
+            $convocation->certificate_design->delete();
         }
 
         return redirect()->route('admin.convocations.index');

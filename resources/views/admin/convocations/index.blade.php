@@ -43,6 +43,9 @@
                         {{ trans('cruds.convocation.fields.is_active') }}
                     </th>
                     <th>
+                        {{ trans('cruds.convocation.fields.certificate_design') }}
+                    </th>
+                    <th>
                         &nbsp;
                     </th>
                 </tr>
@@ -105,6 +108,7 @@
                     { data: 'vice_chancellor', name: 'vice_chancellor' },
                     { data: 'vice_chancellor_signature', name: 'vice_chancellor_signature', sortable: false, searchable: false },
                     { data: 'is_active', name: 'is_active' },
+                    { data: 'certificate_design', name: 'certificate_design', sortable: false, searchable: false },
                     { data: 'actions', name: '{{ trans('global.actions') }}' }
                 ],
                 orderCellsTop: true,

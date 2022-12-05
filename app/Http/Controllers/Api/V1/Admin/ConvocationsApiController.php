@@ -18,7 +18,7 @@ class ConvocationsApiController extends Controller
 
     public function index()
     {
-        //abort_if(Gate::denies('convocation_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('convocation_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         return new ConvocationResource(Convocation::all());
     }
@@ -35,6 +35,10 @@ class ConvocationsApiController extends Controller
             $convocation->addMedia(storage_path('tmp/uploads/' . basename($request->input('vice_chancellor_signature'))))->toMediaCollection('vice_chancellor_signature');
         }
 
+        if ($request->input('certificate_design', false)) {
+            $convocation->addMedia(storage_path('tmp/uploads/' . basename($request->input('certificate_design'))))->toMediaCollection('certificate_design');
+        }
+
         return (new ConvocationResource($convocation))
             ->response()
             ->setStatusCode(Response::HTTP_CREATED);
@@ -42,7 +46,7 @@ class ConvocationsApiController extends Controller
 
     public function show(Convocation $convocation)
     {
-        //abort_if(Gate::denies('convocation_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('convocation_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         return new ConvocationResource($convocation);
     }
@@ -73,6 +77,17 @@ class ConvocationsApiController extends Controller
             $convocation->vice_chancellor_signature->delete();
         }
 
+        if ($request->input('certificate_design', false)) {
+            if (!$convocation->certificate_design || $request->input('certificate_design') !== $convocation->certificate_design->file_name) {
+                if ($convocation->certificate_design) {
+                    $convocation->certificate_design->delete();
+                }
+                $convocation->addMedia(storage_path('tmp/uploads/' . basename($request->input('certificate_design'))))->toMediaCollection('certificate_design');
+            }
+        } elseif ($convocation->certificate_design) {
+            $convocation->certificate_design->delete();
+        }
+
         return (new ConvocationResource($convocation))
             ->response()
             ->setStatusCode(Response::HTTP_ACCEPTED);
@@ -80,7 +95,7 @@ class ConvocationsApiController extends Controller
 
     public function destroy(Convocation $convocation)
     {
-        //abort_if(Gate::denies('convocation_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('convocation_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $convocation->delete();
 

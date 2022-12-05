@@ -32,6 +32,7 @@ use App\Http\Controllers\Admin\GlobalSearchController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/qrcode', [StudentController::class, 'qrcode']);
 
 Route::redirect('/', '/login');
 Route::get('/home', function () {

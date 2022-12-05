@@ -18,6 +18,10 @@ use Yajra\DataTables\Facades\DataTables;
 use PDF;
 class StudentController extends Controller
 {
+    public function qrcode()
+    {
+        return view('admin.qrcode');
+    }
     public function index(Request $request)
     {
         abort_if(Gate::denies('student_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
@@ -177,7 +181,11 @@ class StudentController extends Controller
 
     }
     public function certificate(){
-        Pdf::loadView('admin.students.certificate')->setPaper('a4', 'landscape')->save(public_path().'/certificate/my_stored_file.pdf')->stream('download.pdf');
+        $convocation = Convocation::findOrFail(9);
+       // dd($convocation);
+        $data  = Student::findOrFail(16);
+        return view('admin.students.certificate.nine',compact('data','convocation'));
+        //Pdf::loadView('admin.students.certificate.nine',compact('convocation','data'))->setPaper('a4', 'landscape')->save(public_path().'/certificate/my_stored_file.pdf')->stream('download.pdf');
     }
 
 }
