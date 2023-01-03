@@ -17,17 +17,20 @@ use File;
 use QrCode;
 class StudentApiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
        // abort_if(Gate::denies('student_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
+        if ($request->query('api_key') !== env('Certificate_API_KEY') || $request->query('secret_key') !== env('Certificate_SECRET_KEY')) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
         return new StudentResource(Student::with(['faculty', 'program', 'convocation'])->get());
     }
 
     public function store(StoreStudentRequest $request)
     {
-
-
+        if ($request->api_key !== env('Certificate_API_KEY') || $request->secret_key !== env('Certificate_SECRET_KEY')) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
         $data = $request->all();
         $slNo =  hash('crc32b',$data['serial_no']);
        // Pdf::loadView('admin.students.certificate')->setPaper('a4', 'landscape')->save(public_path().'/certificate/my_stored_file.pdf')->stream('download.pdf');
@@ -49,7 +52,7 @@ $qc_url = url($db_url);
         // call to api
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://192.168.150.191:8080/certificate-verification',
+            CURLOPT_URL => 'http://194.233.78.140:8080/certificate-verification',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -74,12 +77,18 @@ $qc_url = url($db_url);
         $res =  (Array)$blockChainResponse;
         if ($res['success']==1){
             $student = Student::create($data);
-            return "Done";
+            $result['message']=true;
+            $result['certificate_url']= url($db_url);
+
+        }else{
+            $result['message']=true;
+            $result['certificate_url']= null;
+
         }
-        return " not done";
-        return (new StudentResource($student))
-            ->response()
-            ->setStatusCode(Response::HTTP_CREATED);
+        return $result;
+//        return (new StudentResource($student))
+//            ->response()
+//            ->setStatusCode(Response::HTTP_CREATED);
     }
 
     public function show(Student $student)
